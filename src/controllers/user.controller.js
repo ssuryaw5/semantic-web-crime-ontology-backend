@@ -27,9 +27,23 @@ const getData = asyncHandler(async (req, res, next) => {
             }
         );
 
+        // Format the response into the desired structure
+        const formattedResponse = {
+            columnHeaders: response.data.head.vars, // Column headers from response.head.vars
+            rows: response.data.results.bindings.map(binding => {
+                // Create a row object by iterating over the column headers
+                const row = {};
+                response.data.head.vars.forEach(column => {
+                    row[column] = binding[column]?.value || null; // Handle cases where value may not exist
+                });
+                return row;
+            })
+        };
+
         // Send back the response from GraphDB
         res.status(200).json(
-            new ApiResponse(200, response.data, "getData :: SPARQL query executed successfully")
+            new ApiResponse(200, formattedResponse, "getData :: SPARQL query executed successfully")
+            // new ApiResponse(200, response.data, "getData :: SPARQL query executed successfully")
         );
     } catch (error) {
         console.error("Error executing SPARQL query:", error.message);
