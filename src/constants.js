@@ -1,1 +1,1 @@
-export const REPOSITORY_NAME = "semantic-web-crime-ontology";
+export const REPOSITORY_NAME = "semantic-NYC-LA-Crime-Data";

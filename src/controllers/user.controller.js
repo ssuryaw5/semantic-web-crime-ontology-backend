@@ -38,7 +38,15 @@ const getData = asyncHandler(async (req, res, next) => {
                 // Create a row object by iterating over the column headers
                 const row = {};
                 response.data.head.vars.forEach(column => {
-                    row[column] = binding[column]?.value || null; // Handle cases where value may not exist
+                    // Extract the value, clean it, and replace %20 with space
+                    let value = binding[column]?.value || null;
+                    if (value) {
+                        if (value.includes('#')) {
+                            value = value.split('#').pop(); // Keep only the part after the last '#'
+                        }
+                        value = value.replace(/%20/g, ' '); // Replace %20 with space
+                    }
+                    row[column] = value;
                 });
                 return row;
             })
